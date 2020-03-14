@@ -18,7 +18,7 @@ void RevertString(char *str)
     { 
         str[i] = temp[a-i-1];
     }
-    str[a+1] = '\n';
+    str[a+1] = '\0';
     free(temp);
 
 }
