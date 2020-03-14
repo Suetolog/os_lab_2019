@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "revert_string.h"
 
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
 
 	char *reverted_str = malloc(sizeof(char) * (strlen(argv[1]) + 1));
 	strcpy(reverted_str, argv[1]);
+	printf("copied str - %s\n", reverted_str);
 
 	RevertString(reverted_str);
 
