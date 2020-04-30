@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #include "find_min_max.h"
 #include "utils.h"
 
@@ -29,6 +30,6 @@ int main(int argc, char **argv) {
 
   printf("min: %d\n", min_max.min);
   printf("max: %d\n", min_max.max);
-
+   printf("%d\n", argc);
   return 0;
 }
