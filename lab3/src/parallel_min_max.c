@@ -22,18 +22,16 @@ int main(int argc, char **argv) {
   bool with_files = false;
 
 	while (true) {
-		//int current_optind = optind ? optind : 1;
-
-        const char* short_options = "s:a:p:f";
+		int current_optind = optind ? optind : 1;
         
-		static struct option options[] = {{"seed", required_argument, 0, 's'},
-										{"array_size", required_argument, 0, 'a'},
-										{"pnum", required_argument, 0, 'p'},
-										{"by_files", no_argument, 0, 'f'},
+		static struct option options[] = {{"seed", required_argument, 0, },
+										{"array_size", required_argument, 0,},
+										{"pnum", required_argument, 0, },
+										{"by_files", no_argument, 0,},
 										{0, 0, 0, 0}};
 
 		int option_index = 0;
-		int c = getopt_long(argc, argv, short_options, options, &option_index);
+		int c = getopt_long(argc, argv, "f", options, &option_index);
 	
 		if (c == -1) break;
 		
@@ -79,35 +77,7 @@ int main(int argc, char **argv) {
 				with_files = true;
 				break;
 				
-			case 's':
-					seed = atoi(optarg);
-					// your code here
-					// error handling
-					if (seed <= 0) {
-						printf("seed is a positive number\n");
-						return 1;
-					}
-					break;
-			case 'a':
-					array_size = atoi(optarg);
-					// your code here
-					// error handling
-					if (array_size <= 0) {
-						printf("array_size is a positive number\n");
-						return 1;
-					}
-					break;
-			case 'p':
-					pnum = atoi(optarg);
-					// your code here
-					// error handling
-					if (pnum <= 0) {
-						printf("pnum is a positive number\n");
-						return 1;
-					}
-					break;
-				
-
+	
 			case '?':
 				break;
 
@@ -132,7 +102,7 @@ int main(int argc, char **argv) {
 	
 	for(int i=0;i<array_size;i++){
 	    
-	    //printf("%d \n",array[i]);
+	    printf("%d \n",array[i]);
 	    
 	}
 	
@@ -149,7 +119,7 @@ int main(int argc, char **argv) {
 		}
 	}
 	
-	const char path_to_save[] = "trash/file_desc_";
+	const char path_to_save[] = "data";
 	
 	
 	int file_desc[pnum][2][2];
@@ -181,7 +151,7 @@ int main(int argc, char **argv) {
 			int end = (i + 1) * array_size / pnum;
 			end = end > array_size ? array_size : end;
 		
-		   // printf("%d %d \n",begin,end);
+		    // printf("%d %d \n",begin,end);
 			struct MinMax min_max = GetMinMax(array, begin, end);
             //printf("%d %d \n\n",min_max.min, min_max.max);
 
