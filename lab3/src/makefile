@@ -18,7 +18,7 @@ clean :
 
 all : sequential_min_max parallel_min_max exec_min_max
     
-exec_min_max : parallel_min_max
+exec_min_max : sequential_min_max
 	$(CC) -o exec_min_max exec_min_max.c $(CFLAGS)
 	 
 
