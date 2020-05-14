@@ -14,6 +14,7 @@ int main()
     }
     else
     {
+       // wait(0);
         printf("Parent\n");
         while(1);
     }

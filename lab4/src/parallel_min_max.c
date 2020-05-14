@@ -196,6 +196,8 @@ int main(int argc, char **argv) {
 
 			// parallel somehow
 		
+            sleep(timeout + 1);
+
 			int begin = i * array_size / pnum;
 		
 			int end = (i + 1) * array_size / pnum;
