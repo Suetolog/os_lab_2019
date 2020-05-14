@@ -14,10 +14,11 @@ process_memory : process_memory.c
 	$(CC) -o procmem process_memory.c 
 
 clean :
-	rm utils.o find_min_max.o parallel_min_max  procmem
+	rm utils.o find_min_max.o parallel_min_max  procmem paralsum
 
-all : parallel_min_max process_memory
+all : parallel_min_max process_memory paralsum
 
-
+paralsum : parallel_sum.c utils.o
+	$(CC) -o paralsum utils.o parallel_sum.c -g -lpthread $(CFLAGS)
     
 	 

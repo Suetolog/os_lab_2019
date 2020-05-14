@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   uint32_t threads_num = 0;
   uint32_t array_size = 0;
   uint32_t seed = 0;
-  pthread_t threads[threads_num];
+  //pthread_t threads[threads_num];
 
   /*
    * TODO:
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     static struct option options[] = {{"seed", required_argument, 0,},
                                       {"threads_num", required_argument, 0,},
                                       {"array_size", required_argument, 0,},
-                                      {0, 0, 0, 0}};
+                                      {0, 0, 0}};
 
     int option_index = 0;
     int c = getopt_long(argc, argv, "", options, &option_index);
@@ -119,12 +119,12 @@ int main(int argc, char **argv) {
 	}
 	
 	if (seed == -1 || array_size == -1 || threads_num == -1 ) {
-		printf("Usage: %s --seed \"num\" --threads_num \"num\" --array_size \"num\" \n",
+		printf("Usage: %s --seed \"num\" --array_size  \"num\" --threads_num \"num\" \n",
 				argv[0]);
 		return 1;
 	}
 
-	//pthread_t *threads = malloc( sizeof(pthread_t) * threads_num );
+	pthread_t *threads = malloc( sizeof(pthread_t) * threads_num );
 
   int *array = malloc(sizeof(int) * array_size);
   GenerateArray(array, array_size, seed);
@@ -137,7 +137,9 @@ int main(int argc, char **argv) {
 		}
 		printf("\n");
 
-  struct SumArgs args[threads_num];
+  //struct SumArgs args[threads_num];
+  struct SumArgs* args = malloc(sizeof(struct SumArgs) * threads_num);
+	
   int block = array_size / threads_num;
 	for(int i = 0; i < threads_num; ++i)
 	{
@@ -157,13 +159,12 @@ int main(int argc, char **argv) {
 	gettimeofday(&start_time, NULL);
 
   for (uint32_t i = 0; i < threads_num; i++) {
-    if (pthread_create(&threads[i], NULL, ThreadSum, (void *)&args)) {
+    if (pthread_create(&threads[i], NULL, ThreadSum, (void *)&args[i])) {
       printf("Error: pthread_create failed!\n");
       return 1;
     }
   }
   printf("\n");
-int status;
   int total_sum = 0;
   for (uint32_t i = 0; i < threads_num; i++) {
     int sum = 0;
