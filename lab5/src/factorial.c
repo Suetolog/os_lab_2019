@@ -29,8 +29,8 @@ struct args_calc
 
 int sync_fact(int k, int mod){
     
-    for(unsigned int i = k-1; i > 1; i--){
-        k = (k * i % mod) % mod;
+    for(int i = k-1; i > 1; i--){
+        k = (k * i);
     }
     return k % mod;    
 }
@@ -46,7 +46,7 @@ void* thread_factorial(void* args_f)
 
     for(int i = start + 1; i <= end; i ++)
     {
-        work = (work * (i%mod))%mod;
+        work = (work *i) % mod;
     }
     pthread_mutex_lock(&mut);
     *(af -> res) = work;
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     }
     }
     if (k == -1 || pnum == -1 || mod == -1) {
-		printf("Use %s -k \" x\" --pnum \" y \" --mod \" z\" \n",
+		printf("Use %s --k \" x\" --pnum \" y \" --mod \" z\" \n",
 			argv[0]);
 		return 1;
 	}
@@ -123,11 +123,9 @@ int main(int argc, char **argv)
     
     pthread_t* threads = malloc(pnum*sizeof(pthread_t));    
     struct args_calc* ac = malloc(pnum * sizeof(struct args_calc));
-        
     int thread;
     int final_res = 1;
     int block = k / pnum;
-
     struct timeval start_time;
     gettimeofday(&start_time, NULL);
         
