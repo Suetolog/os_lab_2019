@@ -93,18 +93,19 @@ int main(int argc, char **argv)
   for(int i=0;i<pnum;i++){
     pthread_join(threads[i], NULL);
   }
-  printf("Factorial - %d\n",factorial);
+  factorial = (factorial)%mod;
+  printf("!%d mod %d = %d\n",k,mod,factorial);
 
 }
 
 void ParFact(void* args){
     struct fact_args* str=(struct fact_args*)args;
-    int buf=1;
+    int tempfac=1;
     for(int i=str->begin;i<=str->end;i++){
-        buf=((buf*i)%str->mod);
-        printf("Buf - %d\n",buf);
+        tempfac=(tempfac*i);
     }
+     printf("temporary - %d\n",tempfac);
     pthread_mutex_lock(&mut);
-    factorial=(factorial*buf)%str->mod;
+    factorial=factorial*tempfac;
     pthread_mutex_unlock(&mut);
 }
