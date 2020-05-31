@@ -1,26 +1,14 @@
 CC=gcc
-CFLAGS=-I.
+CFLAGS=-I -g -std=c99 
 
-server: server.c libshared.so
-	$(CC) -o srv server.c -lpthread -L. -lshared -Wl,-rpath,.
+server: server.c MultMod.h
+	$(CC) -o srv server.c -lpthread   $(CFLAGS)
 
-client: client.c libshared.so
-	$(CC) -o client client.c -lpthread -L. -lshared -Wl,-rpath,.
-
-exec_s: exec_servers.c
-	$(CC) -o exec_s exec_servers.c -lpthread
+client: client.c MultMod.h
+	$(CC) client.c -o cln -lpthread $(CFLAGS)
 
 clean:
-	rm server client libshared.so
+	rm srv cln 
+	
 
-all: server client
-    
-reset: clean all
-
-libshared.so: slib.o
-	$(CC) -shared -o libshared.so slib.o
-	rm slib.o
-
-slib.o: shared_lib.c
-	$(CC) -c -fPIC shared_lib.c -o slib.o
 

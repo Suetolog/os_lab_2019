@@ -12,25 +12,13 @@
 #include <sys/types.h>
 
 #include "pthread.h"
+#include "MultMod.h"
 
 struct FactorialArgs {
   uint64_t begin;
   uint64_t end;
   uint64_t mod;
 };
-
-uint64_t MultModulo(uint64_t a, uint64_t b, uint64_t mod) {
-  uint64_t result = 0;
-  a = a % mod;
-  while (b > 0) {
-    if (b % 2 == 1)
-      result = (result + a) % mod;
-    a = (a * 2) % mod;
-    b /= 2;
-  }
-
-  return result % mod;
-}
 
 uint64_t Factorial(const struct FactorialArgs *args) {
   uint64_t ans = 1;
@@ -155,7 +143,7 @@ int main(int argc, char **argv) {
       memcpy(&end, from_client + sizeof(uint64_t), sizeof(uint64_t));
       memcpy(&mod, from_client + 2 * sizeof(uint64_t), sizeof(uint64_t));
 
-      fprintf(stdout, "Receive: %lu %lu %lu\n", begin, end, mod);
+      fprintf(stdout, "begin %lu end %lu mod %lu\n", begin, end, mod);
 
       struct FactorialArgs args[tnum];
       int bb = end - begin + 1;
@@ -173,7 +161,7 @@ int main(int argc, char **argv) {
         else{
             args[i].end = begin - 1 + block * (i+1);
         } 
-        printf("%lu %lu\n",args[i].begin, args[i].end);
+        printf("\t%lu to %lu\n",args[i].begin, args[i].end);
         if (pthread_create(&threads[i], NULL, ThreadFactorial,
                            (void *)&args[i])) {
           printf("Error: pthread_create failed!\n");
