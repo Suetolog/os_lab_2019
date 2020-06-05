@@ -1,19 +1,51 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
+#include <getopt.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
 
-#define SERV_PORT 20001
-#define BUFSIZE 1024
-#define SADDR struct sockaddr
-#define SLEN sizeof(struct sockaddr_in)
 
-int main() {
+
+int main(int argc, char *argv[]) {
+
+    size_t PORT = -1;
+	size_t BUFSIZE = -1;
+		
+	while (true) {
+
+    static struct option options[] = {
+        {"port", required_argument},
+        {"bufsize", required_argument},
+        {0, 0, 0, 0}
+    };
+
+    int option_index = 0;
+    int c = getopt_long(argc, argv, "f", options, &option_index);
+
+    if (c == -1)
+    break;
+
+    switch (c) {
+    case 0: {
+        switch (option_index) {
+            case 0:
+                PORT = atoi(optarg);
+                break;
+            case 1:
+                BUFSIZE = atoi(optarg);
+                break;
+            }
+        }
+    }
+    }
   int sockfd, n;
   char mesg[BUFSIZE], ipadr[16];
   struct sockaddr_in servaddr;
@@ -24,21 +56,21 @@ int main() {
     exit(1);
   }
 
-  memset(&servaddr, 0, SLEN);
+  memset(&servaddr, 0, sizeof(struct sockaddr_in));
   servaddr.sin_family = AF_INET;
   servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  servaddr.sin_port = htons(SERV_PORT);
+  servaddr.sin_port = htons(PORT);
 
-  if (bind(sockfd, (SADDR *)&servaddr, SLEN) < 0) {
+  if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr_in)) < 0) {
     perror("bind problem");
     exit(1);
   }
   printf("SERVER starts...\n");
 
   while (1) {
-    unsigned int len = SLEN;
+    unsigned int len = sizeof(struct sockaddr_in);
 
-    if ((n = recvfrom(sockfd, mesg, BUFSIZE, 0, (SADDR *)&cliaddr, &len)) < 0) {
+    if ((n = recvfrom(sockfd, mesg, BUFSIZE, 0, (struct sockaddr *)&cliaddr, &len)) < 0) {
       perror("recvfrom");
       exit(1);
     }
@@ -48,7 +80,7 @@ int main() {
            inet_ntop(AF_INET, (void *)&cliaddr.sin_addr.s_addr, ipadr, 16),
            ntohs(cliaddr.sin_port));
 
-    if (sendto(sockfd, mesg, n, 0, (SADDR *)&cliaddr, len) < 0) {
+    if (sendto(sockfd, mesg, n, 0, (struct sockaddr *)&cliaddr, len) < 0) {
       perror("sendto");
       exit(1);
     }
