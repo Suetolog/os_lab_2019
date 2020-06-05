@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
     perror("listen");
     exit(1);
   }
-
+  printf("Server is listening\n");
   while (1) {
     unsigned int clilen = kSize;
 

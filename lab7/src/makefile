@@ -10,9 +10,9 @@ ucln : udpclient.c
 	$(CC) udpclient.c -o uc $(CFLAGS)
 
 udsrv : udpserver.c
-	$(CC) udpserver.c -o us$(CFLAGS)
+	$(CC) udpserver.c -o us $(CFLAGS)
 
 all : tcln tsrv ucln udsrv
     
 clean :
-	rm tcln tsrv ucln udsrv
+	rm tc ts uc us
